@@ -1,26 +1,44 @@
-from html import parser
+from core.BaseParser import BaseParser
+import re
 
-class NFCParser (parser.HTMLParser): 
+class NFCParser (BaseParser):
     def __init__(self):
-        parser.HTMLParser.__init__(self)
-        self.gravar = 0
-        self.dados = []
+        BaseParser.__init__(self)
+        self.valorTotal = 0
+        self.dados = {}
+
+        self.cur_item = 0
+        self.cur_desc_item = ''
+        self.gravar_dados_itens = False
+        self.gravar_nome_produto = False
 
     def handle_starttag(self, tag, atributos):
-        if (tag != 'span'):
+        if (tag not in self.tags_validos):
             return
         for nome, valor in atributos:
-            if 'txtMax' in valor:
-                self.gravar = 1
-                print (valor)
-            
+            # if 'txtMax' in valor:
+            #     self.valorTotal = 1
+            if 'id' in nome and self.tag_itens in valor:
+                self.cur_item = valor[valor.find(self.tag_itens) + len(self.tag_itens):]
+                self.gravar_dados_itens = True
+            if nome in self.tags_tit_produto and valor in self.tags_tit_produto:
+                self.gravar_nome_produto = True
+                self.dados[self.cur_item] = {}
+
         
     def handle_endtag(self, tag):
-        if self.gravar == 1:
+        if self.valorTotal == 1:
             if (tag == 'span'):
-                self.gravar = 0
+                self.valorTotal = 0
+        if (tag == 'table'):
+            self.acabouTabela = 1
 
     def handle_data(self, data):
-        if self.gravar == 1:
-            self.dados.append(data)
+        if self.valorTotal == 1:
+            self.dados['valorTotal'] = data
+            self.valorTotal = 0
+        if self.gravar_dados_itens:
+            if self.gravar_nome_produto:
+                self.dados[self.cur_item]['descricao'] = data
+                self.gravar_nome_produto = False
 
