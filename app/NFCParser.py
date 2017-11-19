@@ -14,13 +14,12 @@ class NFCParser (BaseParser):
         self.gravar_valor_produto = False
         self.gravar_cod_produto = False
         self.gravar_qtd_produto = False
+        self.passo_1_qtd_produto = False
 
     def handle_starttag(self, tag, atributos):
         if (tag not in self.tags_validos):
             return
         for nome, valor in atributos:
-            # if 'txtMax' in valor:
-            #     self.valorTotal = 1
             if 'id' in nome and self.tag_itens in valor:
                 self.cur_item = valor[valor.find(self.tag_itens) + len(self.tag_itens):]
                 self.gravar_dados_itens = True
@@ -32,16 +31,20 @@ class NFCParser (BaseParser):
             if nome in self.tags_cod_produto and valor in self.tags_cod_produto:
                 self.gravar_cod_produto = True
             if nome in self.tags_qtd_produto and valor in self.tags_qtd_produto:
-                self.gravar_qtd_produto = True
+                self.gravar_qtd_produto= True
 
 
-        
+
+
     def handle_endtag(self, tag):
         if self.valorTotal == 1:
             if (tag == 'span'):
                 self.valorTotal = 0
         if (tag == 'table'):
             self.acabouTabela = 1
+
+
+
 
     def handle_data(self, data):
         if self.valorTotal == 1:
@@ -58,6 +61,12 @@ class NFCParser (BaseParser):
                 self.dados[self.cur_item]['codigo'] = data
                 self.gravar_cod_produto = False
             if self.gravar_qtd_produto:
-                self.dados[self.cur_item]['quantidade'] = data
-                self.gravar_qtd_produto = False
+                if (self.passo_1_qtd_produto):
+                    self.dados[self.cur_item]['quantidade'] = data
+                    self.gravar_qtd_produto = False
+                    self.passo_1_qtd_produto = False
+                    return
+                self.passo_1_qtd_produto = True
 
+    def __len__(self):
+        return len(self.dados)

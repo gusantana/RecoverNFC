@@ -14,7 +14,7 @@ url_dois_itens = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=5117110947
 url_varios_itens = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=51171109477652003454651030002291979093707297&nVersao=100&tpAmb=1&dhEmi=323031372d31312d30355431383a30373a32392d30343a3030&vNF=27.73&vICMS=0.00&digVal=4c564f666d317a38746e416d6c7155574a4a38636b523432594a4d3d&cIdToken=000001&cHashQRCode=754D122011BEA8C1050659866AA09BBCB03CD271'
 
 def main ():
-    r = requests.get(url_dois_itens)
+    r = requests.get(url_varios_itens)
     parser = NFCParser()
     #print (r.text)
     parser.feed(r.text)
