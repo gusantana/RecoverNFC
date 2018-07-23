@@ -6,6 +6,7 @@ import requests
 import sqlite3 as database
 import select
 from app.NFCParser import NFCParser
+from app.model.Item import Item
 
 url_completa = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=51171047508411155940650690001703751000144339&nVersao=100&tpAmb=1&dhEmi=323031372d31302d30325431383a32313a34382d30343a3030&vNF=99.90&vICMS=0.00&digVal=726c564737336a667576387665673339676d77705547772b3569673d&cIdToken=000001&cHashQRCode=98BD5C7C79F7B01E5EF5A6365E741D4B1C7718AA'
 
@@ -16,10 +17,20 @@ url_varios_itens = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=51171109
 url_teste = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=51180109477652000943651040000195201090942311&nVersao=100&tpAmb=1&dhEmi=323031382d30312d33315431393a34323a33312d30333a3030&vNF=40.60&vICMS=0.00&digVal=79326a2f716f654854686c4d3445774a337959336f50706d4374303d&cIdToken=000001&cHashQRCode=15ADC327DBAA8871AAB213228C59D32CCC6C2A4F'
 
 def main ():
-    r = requests.get(url_teste)
+    conexao = database.connect('db.db')
+    file = open('parsed.txt', 'r')
+    item = Item(conexao)
     parser = NFCParser()
-    # print (r.text)
-    parser.feed(r.text)
-    print(parser.dados)
+    for linha in file:
+    	if linha.startswith('http://', 0, len('http://')):
+    		linha = linha.replace('http://', 'https://')
+    	linha = linha.strip(' \n')
+    	r = requests.get(linha)
+    	#print (r.text)
+    	parser.feed(r.text)
+    	item.write(parser.dados)
+    	#print (parser.dados)
+
+    
 
 main ()
