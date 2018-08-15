@@ -14,6 +14,7 @@ class BaseParser(parser.HTMLParser):
         self.tag_data_emissao   = ('strong')
         self.tag_forma_pagamento = '<label>Forma de pagamento:</label><span class="totalNumb txtTitR">Valor pago R$:</span></div><div id="linhaTotal"><label class="tx">'
         self.tags_data_emissao   = ('data-role', 'listview')
+        self.tags_chave          = ('class', 'chave')
 
 
     def adicionarTag(self):
