@@ -6,6 +6,7 @@ class NFCParser (BaseParser):
         BaseParser.__init__(self)
         self.valorTotal = 0
         self.dados = {}
+        self.dados['itens'] = {}
 
         self.cur_item = 0
         self.cur_desc_item = ''
@@ -28,7 +29,7 @@ class NFCParser (BaseParser):
                 self.gravar_dados_itens = True
             if nome in self.tags_tit_produto and valor in self.tags_tit_produto:
                 self.gravar_nome_produto = True
-                self.dados[self.cur_item] = {}
+                self.dados['itens'][self.cur_item] = {}
             if nome in self.tags_valor_produto and valor in self.tags_valor_produto:
                 self.gravar_valor_produto = True
             if nome in self.tags_cod_produto and valor in self.tags_cod_produto:

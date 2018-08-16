@@ -9,19 +9,21 @@ class Item :
         self.conn = conn
     
     def write(self, lista):
-        print(lista)
-        sql = '''INSERT INTO item ('descricao', 'nota_id', 'codigo', 'quantidade', 'valor') VALUES (?, ?, ?, ?, ?)'''
-        cur = self.conn.cursor()
-        nota_id = lista['nota_id']
+        try:
+            sql = '''INSERT INTO item ('descricao', 'nota_id', 'codigo', 'quantidade', 'valor') VALUES (?, ?, ?, ?, ?)'''
+            cur = self.conn.cursor()
+            nota_id = lista['nota_id']
+
+            for index in lista['itens']:
+                item = ((lista['itens'][index]['descricao'], nota_id, lista['itens'][index]['codigo'], lista['itens'][index]['quantidade'], lista['itens'][index]['valor']))
+                #print(lista['nota_id'])
+                cur.execute(sql, item)
+            self.conn.commit()
+        except Exception as e:
+            raise e
         
-        print(nota_id)
-        for index in lista:
-            print(index)
-            item = ((lista[index]['descricao'], nota_id, lista[index]['codigo'], lista[index]['quantidade'], lista[index]['valor']))
-            #print(lista['nota_id'])
-            #cur.execute(sql, item)
-        #self.conn.commit()
 
 
 
             
+
