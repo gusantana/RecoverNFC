@@ -21,7 +21,7 @@ class NFCParser (BaseParser):
         self.gravar_chave_nota  = False
 
     def handle_starttag(self, tag, atributos):
-        if (tag not in self.tags_validos):
+        if tag not in self.tags_validos:
             return
         for nome, valor in atributos:
             if 'id' in nome and self.tag_itens in valor:

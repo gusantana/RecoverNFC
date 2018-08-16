@@ -10,14 +10,13 @@ class Nota :
 		self.conn = conn
 
 	def write(self, lista):#recebe a lista já parseada
-		print(lista)
 		try:
-			if (not 'data_hora' in lista):
+			if not 'data_hora' in lista:
 				lista['data_hora'] = 'EM CONTINGENCIA'
 			sql = '''INSERT INTO nota ('chave', 'chave_str', 'data_hora', 'data_cadastro') VALUES (?, ?, ?, datetime(datetime(), "-240 minutes")) '''
 			cur = self.conn.cursor()
 			row = (lista['chave'], lista['chave_str'], lista['data_hora'])
-			
+
 			cur.execute(sql, row)
 
 			cur = self.conn.cursor()
@@ -27,7 +26,5 @@ class Nota :
 
 		except Exception as e:
 			raise e
-		finally:
-			pass
-
-		return lista
+		#finally:
+			#pass
