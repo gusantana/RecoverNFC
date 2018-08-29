@@ -30,9 +30,10 @@ def main ():
             r = requests.get(linha)
             #print (r.text)
             parser.feed(r.text)
-            parser.dados['url'] = linha
-            notaBo.write(parser.dados)
-            #print(parser.dados)
+            #parser.dados['url'] = linha
+            #notaBo.write(parser.dados)
+            print(parser.dados)
+            break
     except Exception as e:
         print (e)
     
