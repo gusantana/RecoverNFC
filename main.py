@@ -10,6 +10,7 @@ from app.NFCParser import NFCParser
 from app.business.NotaBO import NotaBO
 from app.NFCeParser import NFCeParser
 from app.EmitenteParser import EmitenteParser
+from app.ProdutoParser import ProdutoParser
 
 
 url_completa = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=51171047508411155940650690001703751000144339&nVersao=100&tpAmb=1&dhEmi=323031372d31302d30325431383a32313a34382d30343a3030&vNF=99.90&vICMS=0.00&digVal=726c564737336a667576387665673339676d77705547772b3569673d&cIdToken=000001&cHashQRCode=98BD5C7C79F7B01E5EF5A6365E741D4B1C7718AA'
@@ -22,6 +23,8 @@ url_teste = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=511801094776520
 
 url_aba_nfce = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=1&ajaxRequest=true'
 url_aba_emitente = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=2&ajaxRequest=true'
+url_aba_destinatario = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=3&ajaxRequest=true'
+url_aba_produtos = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=4&ajaxRequest=true'
 
 def main ():
 	conexao = database.connect('db.db')
@@ -33,15 +36,19 @@ def main ():
 			parser = NFCParser()
 			parserNFCe = NFCeParser()
 			parserEmitente = EmitenteParser()
+			parserProduto = ProdutoParser()
 			if linha.startswith('http://', 0, len('http://')):
 				linha = linha.replace('http://', 'https://')
 			linha = linha.strip(' \n')
 			r = requests.get(linha)
 
 			#aba_nfce = requests.get(url_aba_nfce, cookies = r.cookies)
-			aba_emitente = requests.get(url_aba_emitente, cookies = r.cookies)
+			#aba_emitente = requests.get(url_aba_emitente, cookies = r.cookies)
+			aba_produtos = requests.get(url_aba_produtos, cookies = r.cookies)
 			#print(aba_emitente.text)
-			parserEmitente.feed(aba_emitente.text)
+			#parserEmitente.feed(aba_emitente.text)
+			#print(aba_produtos.text)
+			parserProduto.feed(aba_produtos.text)
 			#parser.feed(r.text)
 			#print(parser.dados)
 			#r = requests.get('https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&tagSolicitada=1', cookies = cookies)
@@ -50,6 +57,7 @@ def main ():
 			#print (r.text)
 			#parserNFCe.feed(aba_nfce.text)
 			#print(parserNFCe)
+			#print(parserEmitente)
 			#parser.dados['url'] = linha
 			#notaBo.write(parser.dados)
 			#print(parser.dados)
