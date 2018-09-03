@@ -23,6 +23,9 @@ class Empresa:
 
 
 	def add(self, label, dados):
+		label = label.replace("\n", '')
+		label = label.strip()
+		
 		if label in self.dados:
 			for i in self.dados[label]:
 				if 'Endereço' in label and ',' in dados:

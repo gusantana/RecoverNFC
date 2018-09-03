@@ -28,6 +28,9 @@ class NFCe:
 		self.autorizacao_uso = ""
 
 	def add(self, label, dados):
+		label = label.replace("\n", '')
+		label = label.strip()
+
 		if label in self.dados:
 			for i in self.dados[label]:
 				dados = dados.replace("\n", '')
