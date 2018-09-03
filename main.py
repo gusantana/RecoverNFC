@@ -49,6 +49,7 @@ def main ():
 			#parserEmitente.feed(aba_emitente.text)
 			#print(aba_produtos.text)
 			parserProduto.feed(aba_produtos.text)
+			pprint(parserProduto.dados)
 			#parser.feed(r.text)
 			#print(parser.dados)
 			#r = requests.get('https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&tagSolicitada=1', cookies = cookies)

@@ -1,5 +1,6 @@
 from core.BaseParser import BaseParser
 import re
+from app.model.Produto import Produto
 
 class ProdutoParser (BaseParser):
 	def __init__(self):
@@ -25,6 +26,10 @@ class ProdutoParser (BaseParser):
 
 		self.gravando_info_adicional = False
 
+		self.produto = Produto()
+		self.ultima_label = ''
+		self.gravar_dados_item = False
+
 	def mudar_tags_validas(self, contexto):
 		if 'adicionais_produto' in contexto:
 			self.tags_validos = ('span', 'label')
@@ -48,20 +53,23 @@ class ProdutoParser (BaseParser):
 		for nome, valor in atributos:
 			if 'table' in tag and 'id' in nome and self.tag_itens in valor:
 				self.cur_item = int(valor[valor.find(self.tag_itens) + len(self.tag_itens):])
+				self.gravar_dados_item = True
 				self.dados['itens'][self.cur_item] = {}
 				
 			if 'table' in tag and 'id' in nome and str(self.cur_item) == valor:
 				self.dados['itens'][self.cur_item]['info_adicional'] = {}
 				self.mudar_tags_validas('adicionais_produto')
-				
-			if nome in self.tags_tit_produto and valor in self.tags_tit_produto:
-				self.gravar_descricao = True
-			if nome in self.tags_qtd_produto and valor in self.tags_qtd_produto:
-				self.gravar_qtd_produto = True
-			if nome in self.tags_unidade_comercial and valor in self.tags_unidade_comercial:
-				self.gravar_unidade_comercial = True
-			if nome in self.tags_valor_produto and valor in self.tags_valor_produto:
-				self.gravar_valor_produto = True
+			
+			if self.gravar_dados_item:
+				if nome in self.tags_tit_produto and valor in self.tags_tit_produto:
+					self.gravar_descricao = True
+				if nome in self.tags_qtd_produto and valor in self.tags_qtd_produto:
+					self.gravar_qtd_produto = True
+				if nome in self.tags_unidade_comercial and valor in self.tags_unidade_comercial:
+					print(tag)
+					self.gravar_unidade_comercial = True
+				if nome in self.tags_valor_produto and valor in self.tags_valor_produto:
+					self.gravar_valor_produto = True
 
 
 	def handle_endtag(self, tag):
@@ -71,26 +79,32 @@ class ProdutoParser (BaseParser):
 
 	def handle_data(self, data):
 		if self.gravar_descricao: 
-			#self.dados['itens'][self.cur_item]['']
-			#print(data)
+			self.dados['itens'][self.cur_item]['descricao'] = data
 			self.gravar_descricao = False
 
 		if self.gravar_qtd_produto:
-			#print(data)
+			self.dados['itens'][self.cur_item]['qtd'] = data
 			self.gravar_qtd_produto = False
 
 		if self.gravar_unidade_comercial:
-			#print(data)
+			self.dados['itens'][self.cur_item]['unidade_comercial'] = data
 			self.gravar_unidade_comercial = False
 
 		if self.gravar_valor_produto:
-			#print(data)
+			self.dados['itens'][self.cur_item]['valor'] = data
 			self.gravar_valor_produto = False
-
+			
 		if self.gravar_label and self.gravando_info_adicional:
-			print('Label: {}'.format(data))
+			self.ultima_label = data
 			self.gravar_label = False
 
 		if self.gravar_dados and self.gravando_info_adicional:
-			print('Dado: {}'.format(data))
+			if 'Valor Total do Frete' in data:
+				return
+			self.produto.add(self.ultima_label, data)
+			self.produto.atualizarLista(self.dados['itens'][self.cur_item]['info_adicional'], self.ultima_label)
 			self.gravar_dados = False
+
+
+	def __str__(self):
+		return self.dados.__str__()
