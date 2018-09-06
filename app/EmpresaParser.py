@@ -1,10 +1,10 @@
-#Parser correspondente da aba NFCe
-from pprint import *
+#Parser correspondente da aba Emitente
+#from pprint import *
 from html import parser
 import re
 from app.model.Empresa import Empresa
 
-class EmitenteParser(parser.HTMLParser):
+class EmpresaParser(parser.HTMLParser):
 	def __init__(self):
 		parser.HTMLParser.__init__(self)
 		self.tags_tabela = ('td')
@@ -38,3 +38,6 @@ class EmitenteParser(parser.HTMLParser):
 
 	def __str__(self):
 		return self.empresa.__str__()
+
+	def get(self):
+		return self.empresa.get()

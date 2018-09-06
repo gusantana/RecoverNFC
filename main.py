@@ -9,10 +9,11 @@ import select
 from app.NFCParser import NFCParser
 from app.business.NotaBO import NotaBO
 from app.NFCeParser import NFCeParser
-from app.EmitenteParser import EmitenteParser
+from app.EmpresaParser import EmpresaParser
 from app.ProdutoParser import ProdutoParser
 from app.TotaisParser import TotaisParser
 from app.PagamentoParser import PagamentoParser
+from app.InfoAdicionalParser import InfoAdicionalParser
 
 url_completa = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?chNFe=51171047508411155940650690001703751000144339&nVersao=100&tpAmb=1&dhEmi=323031372d31302d30325431383a32313a34382d30343a3030&vNF=99.90&vICMS=0.00&digVal=726c564737336a667576387665673339676d77705547772b3569673d&cIdToken=000001&cHashQRCode=98BD5C7C79F7B01E5EF5A6365E741D4B1C7718AA'
 
@@ -29,59 +30,88 @@ url_aba_produtos = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&
 url_aba_totais = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=5&ajaxRequest=true'
 url_aba_transporte = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=6&ajaxRequest=true'
 url_aba_pagamento = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=7&ajaxRequest=true'
+url_info_adicional = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=8&ajaxRequest=true'
 
 def main ():
 	conexao = database.connect('db.db')
 	file = open('parsed.txt', 'r')
 	notaBo = NotaBO (conexao)
-
+	lista = []
+	i = 0
 	try:
 		for linha in file:
 			parser = NFCParser()
-			parserNFCe = NFCeParser()
-			parserEmitente = EmitenteParser()
-			parserProduto = ProdutoParser()
-			parserTotais = TotaisParser()
-			parserPagamento = PagamentoParser()
+			nfceParser = NFCeParser()
+			empresaParser = EmpresaParser()
+			produtoParser = ProdutoParser()
+			totaisParser = TotaisParser()
+			pagamentoParser = PagamentoParser()
+			infoAdicionalParser = InfoAdicionalParser()
+
 			if linha.startswith('http://', 0, len('http://')):
 				linha = linha.replace('http://', 'https://')
 			linha = linha.strip(' \n')
 			r = requests.get(linha)
 
-			#aba_nfce = requests.get(url_aba_nfce, cookies = r.cookies)
-			#aba_emitente = requests.get(url_aba_emitente, cookies = r.cookies)
-			#aba_produtos = requests.get(url_aba_produtos, cookies = r.cookies)
-			#aba_totais = requests.get(url_aba_totais, cookies = r.cookies)
-			#aba_transporte = requests.get(url_aba_transporte, cookies = r.cookies)
+			aba_nfce = requests.get(url_aba_nfce, cookies = r.cookies)
+			aba_emitente = requests.get(url_aba_emitente, cookies = r.cookies)
+			aba_produtos = requests.get(url_aba_produtos, cookies = r.cookies)
+			aba_totais = requests.get(url_aba_totais, cookies = r.cookies)
+			aba_transporte = requests.get(url_aba_transporte, cookies = r.cookies)
 			aba_pagamento = requests.get(url_aba_pagamento, cookies = r.cookies)
+			aba_info_adicional = requests.get(url_info_adicional, cookies = r.cookies)
 
+			nfceParser.feed(aba_nfce.text)
+			empresaParser.feed(aba_emitente.text)
+			produtoParser.feed(aba_produtos.text)
+			totaisParser.feed(aba_totais.text)
+			pagamentoParser.feed(aba_pagamento.text)
+			infoAdicionalParser.feed(aba_info_adicional.text)
+
+
+
+			dados = {}
+			dados['nfce'] = nfceParser.get()
+			dados['empresa'] = empresaParser.get()
+			dados['produtos'] = produtoParser.get()
+			dados['totais'] = totaisParser.get()
+			dados['pagamento'] = pagamentoParser.get()
+			dados['info_adicional'] = infoAdicionalParser.get()
+
+			# print(infoAdicionalParser.get())
+			lista.append(dados)
+			# pprint (dados)
 			#print(aba_emitente.text)
-			#parserEmitente.feed(aba_emitente.text)
-			#print(aba_produtos.text)
+			
+			# print(aba_produtos.text)
 			#print(aba_totais.text)
-			#parserTotais.feed(aba_totais.text)
-			#print(parserTotais.totais)
+			#
+			#print(totaisParser.totais)
 			#print(aba_transporte.text)
-			parserPagamento.feed(aba_pagamento.text)
-
+			
+			#print(pagamentoParser.get())
+			#print(aba_pagamento.text)
 			#print(aba_cobranca.text)
 			
 
-			#parserProduto.feed(aba_produtos.text)
-			#pprint(parserProduto.dados)
+			#
+			#pprint(produtoParser.dados)
 			#parser.feed(r.text)
 			#print(parser.dados)
 			#r = requests.get('https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&tagSolicitada=1', cookies = cookies)
 			
 
 			#print (r.text)
-			#parserNFCe.feed(aba_nfce.text)
-			#print(parserNFCe)
-			#print(parserEmitente)
+			
+			#print(nfceParser)
+			#print(empresaParser)
 			#parser.dados['url'] = linha
 			#notaBo.write(parser.dados)
 			#print(parser.dados)
-			break
+			i = i + 1
+			if (i == 6):
+				break
+		print(lista)
 	except Exception as e:
 		print (e)
 	

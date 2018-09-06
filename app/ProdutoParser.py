@@ -66,7 +66,6 @@ class ProdutoParser (BaseParser):
 				if nome in self.tags_qtd_produto and valor in self.tags_qtd_produto:
 					self.gravar_qtd_produto = True
 				if nome in self.tags_unidade_comercial and valor in self.tags_unidade_comercial:
-					print(tag)
 					self.gravar_unidade_comercial = True
 				if nome in self.tags_valor_produto and valor in self.tags_valor_produto:
 					self.gravar_valor_produto = True
@@ -108,3 +107,6 @@ class ProdutoParser (BaseParser):
 
 	def __str__(self):
 		return self.dados.__str__()
+
+	def get(self):
+		return self.dados['itens']

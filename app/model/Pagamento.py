@@ -2,31 +2,28 @@ import re
 
 class Pagamento:
 	def __init__(self):
-		self.dados = {}
-		self.dados['Forma de Pagamento'] = { 'forma_pagamento' : '' }
-		self.dados['Valor do Pagamento'] = { 'pagamento' : '' }
-		self.dados['Tipo de Integração Pagamento'] = { 'tipo_integracao_pagamento' : '' }
-		self.dados['CNPJ da Credenciadora'] = { 'cnpj_credenciadora' : '' }
-		self.dados['Bandeira da operadora'] = { 'bandeira_operadora' : '' }
-		self.dados['Número de autorização'] = { 'numero_autorizacao' : ''}
+		# self.dados = {}
+		self.dados = []
+		self.dados.append({ 'forma_pagamento' : ''})
+		self.dados.append({ 'pagamento' : '' })
+		self.dados.append({ 'tipo_integracao_pagamento' : '' })
+		self.dados.append({ 'cnpj_credenciadora' : '' })
+		self.dados.append({ 'bandeira_operadora' : '' })
+		self.dados.append({ 'numero_autorizacao' : ''})
 
-	def add(self, label, dados):
-		label = label.replace("\n", '')
-		label = label.strip()
+	def add(self, index, valor):
+		valor = valor.replace('\n', '')
+		valor = valor.strip()
+		valor = re.sub('^[0-9]+\s+-\s+', '', valor)
+		for label in self.dados[index]:
+			self.dados[index][label] = valor
 
-		if label in self.dados:
-			for i in self.dados[label]:
-				dados = dados.replace("\n", '')
-				dados = dados.strip() 
-				self.dados[label][i] = dados
-
-	def atualizarLista(self, lista, label):
-		for label in self.dados:
-			for i in self.dados[label]:
-				lista[i] = self.dados[label][i]
-
-	def get(self, label):
-		return self.dados[label]
+	def get(self):
+		dados = {}
+		for valores in self.dados:
+			for coluna in valores:
+				dados[coluna] = valores[coluna]
+		return dados
 
 	def __str__(self):
 		lista = {}

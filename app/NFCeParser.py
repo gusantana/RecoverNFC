@@ -36,3 +36,6 @@ class NFCeParser(parser.HTMLParser):
 			
 	def __str__(self):
 		return self.nfce.__str__()
+
+	def get(self):
+		return self.nfce.get()

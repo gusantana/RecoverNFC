@@ -3,22 +3,22 @@ import re
 class Totais:
 	def __init__(self):
 		self.dados = {}
-		self.dados['Base de Cálculo ICMS'] = { 'base_icms' : '' }
-		self.dados['Valor do ICMS'] = { 'valor_icms' : '' }
-		self.dados['Valor do ICMS Desonerado'] = { 'icms_desonerado' : '' }
-		self.dados['Base de Cálculo ICMS ST'] = { 'base_icms_st' : '' }
-		self.dados['Valor ICMS Substituição'] = { 'icms_substituicao' : '' }
-		self.dados['Valor Total dos Produtos'] = { 'valor_total_produtos' : ''}
-		self.dados['Valor do Frete'] = { 'frete' : '' }
-		self.dados['Valor do Seguro'] = { 'seguro' : '' }
-		self.dados['Outras Despesas Acessórias'] = { 'outras_despesas_acessorias' : '' }
-		self.dados['Valor Total do IPI'] = { 'total_ipi' : '' }
-		self.dados['Valor Total da NFe'] = { 'total_nfe' : '' }
-		self.dados['Valor Total dos Descontos'] = { 'total_descontos' : '' }
-		self.dados['Valor Total do II'] = { 'total_ii' : '' }
-		self.dados['Valor do PIS'] = { 'pis' : '' }
-		self.dados['Valor da COFINS'] = { 'cofins' : '' }
-		self.dados['Valor Aproximado dos Tributos'] = { 'valor_aproximado_tributos' : '' }
+		self.dados['Base de Cálculo ICMS'] = { 'base_icms' : None }
+		self.dados['Valor do ICMS'] = { 'valor_icms' : None }
+		self.dados['Valor do ICMS Desonerado'] = { 'icms_desonerado' : None }
+		self.dados['Base de Cálculo ICMS ST'] = { 'base_icms_st' : None }
+		self.dados['Valor ICMS Substituição'] = { 'icms_substituicao' : None }
+		self.dados['Valor Total dos Produtos'] = { 'valor_total_produtos' : None}
+		self.dados['Valor do Frete'] = { 'frete' : None }
+		self.dados['Valor do Seguro'] = { 'seguro' : None }
+		self.dados['Outras Despesas Acessórias'] = { 'outras_despesas_acessorias' : None }
+		self.dados['Valor Total do IPI'] = { 'total_ipi' : None }
+		self.dados['Valor Total da NFe'] = { 'total_nfe' : None }
+		self.dados['Valor Total dos Descontos'] = { 'total_descontos' : None }
+		self.dados['Valor Total do II'] = { 'total_ii' : None }
+		self.dados['Valor do PIS'] = { 'pis' : None }
+		self.dados['Valor da COFINS'] = { 'cofins' : None }
+		self.dados['Valor Aproximado dos Tributos'] = { 'valor_aproximado_tributos' : None }
 
 
 	def add(self, label, dados):
@@ -37,8 +37,12 @@ class Totais:
 			for i in self.dados[label]:
 				lista[i] = self.dados[label][i]
 
-	def get(self, label):
-		return self.dados[label]
+	def get(self):
+		lista = {}
+		for label in self.dados:
+			for i in self.dados[label]:
+				lista[i] = self.dados[label][i]
+		return lista
 
 	def __str__(self):
 		lista = {}

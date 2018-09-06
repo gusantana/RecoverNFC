@@ -38,6 +38,9 @@ class TotaisParser (BaseParser):
 
 	def __str__(self):
 		return this.totais.__str__()
+
+	def get(self):
+		return self.totais.get()
 		#lista = {}
 		#for label in self.dados:
 			#for i in self.dados[label]:
