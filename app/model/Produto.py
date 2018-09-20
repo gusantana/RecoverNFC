@@ -1,7 +1,8 @@
 import re
 
 class Produto:
-	def __init__(self):
+	def __init__(self, conexao = None):
+		self.conexao = conexao
 		self.dados = {}
 		self.dados['Código do Produto'] = { 'codigo' : None }
 		self.dados['Código NCM'] = { 'codigo_ncm' : None }
@@ -44,3 +45,18 @@ class Produto:
 			for i in self.dados[label]:
 				lista[i] = self.dados[label][i]
 		return lista.__str__()
+
+
+	def write(self, dados):
+		try:
+			cur = self.conexao.cursor
+			dados_produtos = dados['produtos']
+			id_nota = dados['nfce']['id']
+
+			sql = '''INSERT INTO item (id_nota, descricao, codigo, quantidade, unidade_comercial, valor) VALUES (?, ?, ?, ?, ?, ?)'''
+
+			for index in dados_produtos:
+				produto = dados_produtos[index]
+				param = (id_nota, produto['descricao'], produto['info_adicional']['codigo'], produto['qtd'], )
+		except Exception as e:
+			raise e

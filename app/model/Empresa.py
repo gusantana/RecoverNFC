@@ -1,7 +1,8 @@
 import re
 
 class Empresa:
-	def __init__(self):
+	def __init__(self, conexao = None):
+		self.conexao = conexao
 		self.dados = {}
 		self.dados['Nome / Razão Social'] = { 'razao_social' : None }
 		self.dados['Nome Fantasia'] = { 'nome_fantasia' : None }
@@ -58,3 +59,31 @@ class Empresa:
 			for i in self.dados[label]:
 				lista[i] = self.dados[label][i]
 		return lista
+
+
+	def write(self, dados):
+		try:
+			cur = self.conexao.cursor()
+			dados_empresa = dados['empresa']
+
+			try:
+				sql = '''SELECT id FROM empresa where cnpj = ?'''
+				param = (dados_empresa['cnpj'],)
+				cur.execute(sql, param)
+				id_empresa = cur.fetchone()[0]
+				
+			except Exception as e:
+				sql = '''INSERT INTO empresa (razao_social, cnpj, nome_fantasia, inscricao_estadual, endereco, numero, bairro, municipio, uf, cep, telefone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'''
+				
+				param = (dados_empresa['razao_social'], dados_empresa['cnpj'], dados_empresa['nome_fantasia'], dados_empresa['inscricao_estadual'], dados_empresa['endereco'], dados_empresa['numero'], dados_empresa['bairro'], dados_empresa['municipio'], dados_empresa['uf'], dados_empresa['cep'], dados_empresa['telefone'])
+
+				cur.execute(sql, param)
+
+				cur = self.conexao.cursor()
+				cur.execute("SELECT last_insert_rowid()")
+				id_empresa = cur.fetchone()[0]
+
+			finally:
+				dados['empresa']['id'] = id_empresa
+		except Exception as e:
+			raise e

@@ -51,6 +51,7 @@ def main ():
 			if linha.startswith('http://', 0, len('http://')):
 				linha = linha.replace('http://', 'https://')
 			linha = linha.strip(' \n')
+
 			r = requests.get(linha)
 
 			aba_nfce = requests.get(url_aba_nfce, cookies = r.cookies)
@@ -61,6 +62,7 @@ def main ():
 			aba_pagamento = requests.get(url_aba_pagamento, cookies = r.cookies)
 			aba_info_adicional = requests.get(url_info_adicional, cookies = r.cookies)
 
+			parser.feed(r.text)
 			nfceParser.feed(aba_nfce.text)
 			empresaParser.feed(aba_emitente.text)
 			produtoParser.feed(aba_produtos.text)
@@ -69,8 +71,8 @@ def main ():
 			infoAdicionalParser.feed(aba_info_adicional.text)
 
 
-
 			dados = {}
+			dados['comum'] = parser.get()
 			dados['nfce'] = nfceParser.get()
 			dados['empresa'] = empresaParser.get()
 			dados['produtos'] = produtoParser.get()
@@ -106,12 +108,12 @@ def main ():
 			#print(nfceParser)
 			#print(empresaParser)
 			#parser.dados['url'] = linha
-			#notaBo.write(parser.dados)
+			notaBo.write(dados)
 			#print(parser.dados)
 			i = i + 1
 			if (i == 6):
 				break
-		pprint(lista)
+		
 	except Exception as e:
 		print (e)
 	

@@ -130,3 +130,6 @@ class NFCParser (BaseParser):
 
 	def __len__(self):
 		return len(self.dados)
+
+	def get(self):
+		return self.dados

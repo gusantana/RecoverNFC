@@ -1,5 +1,5 @@
 import sqlite3 as database
-
+from pprint import *
 class Item :
     '''
     SQL CREATE:
@@ -10,15 +10,16 @@ class Item :
     
     def write(self, lista):
         try:
-            sql = '''INSERT INTO item ('descricao', 'nota_id', 'codigo', 'quantidade', 'valor') VALUES (?, ?, ?, ?, ?)'''
-            cur = self.conn.cursor()
-            nota_id = lista['nota_id']
+            pprint(lista)
+            # sql = '''INSERT INTO item ('descricao', 'nota_id', 'codigo', 'quantidade', 'valor') VALUES (?, ?, ?, ?, ?)'''
+            # cur = self.conn.cursor()
+            # nota_id = lista['nota_id']
 
-            for index in lista['itens']:
-                item = ((lista['itens'][index]['descricao'], nota_id, lista['itens'][index]['codigo'], lista['itens'][index]['quantidade'], lista['itens'][index]['valor']))
-                #print(lista['nota_id'])
-                cur.execute(sql, item)
-            self.conn.commit()
+            # for index in lista['itens']:
+            #     item = ((lista['itens'][index]['descricao'], nota_id, lista['itens'][index]['codigo'], lista['itens'][index]['quantidade'], lista['itens'][index]['valor']))
+            #     #print(lista['nota_id'])
+            #     cur.execute(sql, item)
+            # self.conn.commit()
         except Exception as e:
             raise e
         
