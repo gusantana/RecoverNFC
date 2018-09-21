@@ -1,8 +1,8 @@
 import re
 
 class Pagamento:
-	def __init__(self):
-		# self.dados = {}
+	def __init__(self, conexao = None):
+		self.conexao = conexao
 		self.dados = []
 		self.dados.append({ 'forma_pagamento' : ''})
 		self.dados.append({ 'pagamento' : '' })
@@ -31,3 +31,26 @@ class Pagamento:
 			for i in self.dados[label]:
 				lista[i] = self.dados[label][i]
 		return lista.__str__()
+
+
+	def write(self, dados):
+		try:
+			pagamento = dados['pagamento']
+			id_nota = dados['nfce']['id']
+			cur = self.conexao.cursor()
+
+			sql = '''INSERT INTO pagamento (
+						id_nota,
+						forma_pagamento,
+						pagamento,
+						bandeira_operadora,
+						cnpj_operadora,
+						numero_operacao,
+						tipo_integracao_pagamento)
+					VALUES (?, ?, ?, ?, ?, ?, ?)'''
+
+			param = (id_nota, pagamento['forma_pagamento'], pagamento['pagamento'], pagamento['bandeira_operadora'], pagamento['cnpj_operadora'], pagamento['numero_operacao'], pagamento['tipo_integracao_pagamento'])
+
+			cur.execute(sql, param)
+		except Exception as e:
+			raise e

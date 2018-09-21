@@ -49,7 +49,7 @@ class Produto:
 
 	def write(self, dados):
 		try:
-			cur = self.conexao.cursor
+			cur = self.conexao.cursor()
 			dados_produtos = dados['produtos']
 			id_nota = dados['nfce']['id']
 
@@ -57,6 +57,7 @@ class Produto:
 
 			for index in dados_produtos:
 				produto = dados_produtos[index]
-				param = (id_nota, produto['descricao'], produto['info_adicional']['codigo'], produto['qtd'], )
+				param = (id_nota, produto['descricao'], produto['info_adicional']['codigo'], produto['qtd'], produto['unidade_comercial'], produto['valor'])
+				cur.execute(sql, param)
 		except Exception as e:
 			raise e
