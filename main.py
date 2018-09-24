@@ -110,9 +110,6 @@ def main ():
 			#parser.dados['url'] = linha
 			notaBo.write(dados)
 			#print(parser.dados)
-			i = i + 1
-			if (i == 6):
-				break
 		
 	except Exception as e:
 		print (e)
