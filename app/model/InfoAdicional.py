@@ -1,7 +1,8 @@
 import re
 
 class InfoAdicional:
-	def __init__(self):
+	def __init__(self, conexao = None):
+		self.conexao = conexao
 		self.dados = {}
 		self.dados['Descrição'] = { 'descricao' : None }
 		self.dados['FEDERAL'] = { 'imposto_federal' : None }
@@ -38,3 +39,17 @@ class InfoAdicional:
 		return lista
 
 
+	def write(self):
+		try:
+			cur = self.conexao.cursor()
+			info_adicional = dados['info_adicional']
+			id_nota = dados['nfce']['id']
+
+			sql = '''INSERT INTO info_adicional (id_nota, descricao, imposto_estadual, imposto_federal, qr_code) VALUES (?, ?, ?, ?, ?)'''
+
+			param = (id_nota, info_adicional['descricao'], info_adicional['imposto_estadual'], info_adicional['imposto_federal'], info_adicional['qr_code'])
+
+			cur.execute(sql, param)
+			
+		except Exception as e:
+			raise e

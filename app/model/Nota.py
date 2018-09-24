@@ -15,6 +15,8 @@ class Nota :
 			nfce = dados['nfce']
 			id_empresa = dados['empresa']['id']
 			cur = self.conn.cursor()
+			if not 'data_hora' in comum:
+				comum['data_hora'] = 'EM CONTINGENCIA'
 
 			sql = '''INSERT INTO nota (
 						id_empresa,

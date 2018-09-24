@@ -44,12 +44,12 @@ class Pagamento:
 						forma_pagamento,
 						pagamento,
 						bandeira_operadora,
-						cnpj_operadora,
-						numero_operacao,
+						cnpj_credenciadora,
+						numero_autorizacao,
 						tipo_integracao_pagamento)
 					VALUES (?, ?, ?, ?, ?, ?, ?)'''
 
-			param = (id_nota, pagamento['forma_pagamento'], pagamento['pagamento'], pagamento['bandeira_operadora'], pagamento['cnpj_operadora'], pagamento['numero_operacao'], pagamento['tipo_integracao_pagamento'])
+			param = (id_nota, pagamento['forma_pagamento'], pagamento['pagamento'], pagamento['bandeira_operadora'], pagamento['cnpj_credenciadora'], pagamento['numero_autorizacao'], pagamento['tipo_integracao_pagamento'])
 
 			cur.execute(sql, param)
 		except Exception as e:
