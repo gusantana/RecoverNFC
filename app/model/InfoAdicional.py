@@ -39,7 +39,7 @@ class InfoAdicional:
 		return lista
 
 
-	def write(self):
+	def write(self, dados):
 		try:
 			cur = self.conexao.cursor()
 			info_adicional = dados['info_adicional']
@@ -50,6 +50,6 @@ class InfoAdicional:
 			param = (id_nota, info_adicional['descricao'], info_adicional['imposto_estadual'], info_adicional['imposto_federal'], info_adicional['qr_code'])
 
 			cur.execute(sql, param)
-			
+
 		except Exception as e:
 			raise e

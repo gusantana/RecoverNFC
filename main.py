@@ -37,7 +37,6 @@ def main ():
 	file = open('parsed.txt', 'r')
 	notaBo = NotaBO (conexao)
 	lista = []
-	i = 0
 	try:
 		for linha in file:
 			parser = NFCParser()
@@ -70,7 +69,6 @@ def main ():
 			pagamentoParser.feed(aba_pagamento.text)
 			infoAdicionalParser.feed(aba_info_adicional.text)
 
-
 			dados = {}
 			dados['comum'] = parser.get()
 			dados['nfce'] = nfceParser.get()
@@ -80,37 +78,8 @@ def main ():
 			dados['pagamento'] = pagamentoParser.get()
 			dados['info_adicional'] = infoAdicionalParser.get()
 
-			# print(infoAdicionalParser.get())
-			lista.append(dados)
-			# pprint (dados)
-			#print(aba_emitente.text)
-			
-			# print(aba_produtos.text)
-			#print(aba_totais.text)
-			#
-			#print(totaisParser.totais)
-			#print(aba_transporte.text)
-			
-			#print(pagamentoParser.get())
-			#print(aba_pagamento.text)
-			#print(aba_cobranca.text)
-			
-
-			#
-			#pprint(produtoParser.dados)
-			#parser.feed(r.text)
-			#print(parser.dados)
-			#r = requests.get('https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&tagSolicitada=1', cookies = cookies)
-			
-
-			#print (r.text)
-			
-			#print(nfceParser)
-			#print(empresaParser)
-			#parser.dados['url'] = linha
 			notaBo.write(dados)
-			#print(parser.dados)
-		
+
 	except Exception as e:
 		print (e)
 	

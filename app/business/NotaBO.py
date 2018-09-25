@@ -14,7 +14,7 @@ class NotaBO :
 		self.produto = Produto(conexao)
 		self.pagamento = Pagamento(conexao)
 		self.totais = Totais(conexao)
-		self.info_adicional = 
+		self.info_adicional = InfoAdicional(conexao)
 		self.conexao = conexao
 	
 	def write(self, dados):
