@@ -32,55 +32,65 @@ url_aba_transporte = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAba
 url_aba_pagamento = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=7&ajaxRequest=true'
 url_info_adicional = 'https://www.sefaz.mt.gov.br/nfce/consultanfce?pagn=visuAbas&montaAba=true&tagSolicitada=8&ajaxRequest=true'
 
-def write (link):
-	conexao = database.connect('db.db')
-	file = open('parsed.txt', 'r')
-	notaBo = NotaBO (conexao)
-	# lista = []
-	link = link
-	try:
-	# 	for linha in file:
-		parser = NFCParser()
-		nfceParser = NFCeParser()
-		empresaParser = EmpresaParser()
-		produtoParser = ProdutoParser()
-		totaisParser = TotaisParser()
-		pagamentoParser = PagamentoParser()
-		infoAdicionalParser = InfoAdicionalParser()
+class Nfc:
+	def __init__():
+		pass
+		
+	def write (link):
+		conexao = database.connect('db.db')
+		file = open('parsed.txt', 'r')
+		notaBo = NotaBO (conexao)
+		# lista = []
+		link = link
+		try:
+		# 	for linha in file:
+			parser = NFCParser()
+			nfceParser = NFCeParser()
+			empresaParser = EmpresaParser()
+			produtoParser = ProdutoParser()
+			totaisParser = TotaisParser()
+			pagamentoParser = PagamentoParser()
+			infoAdicionalParser = InfoAdicionalParser()
 
-		if linha.startswith('http://', 0, len('http://')):
-			linha = linha.replace('http://', 'https://')
-		linha = linha.strip(' \n')
+			if linha.startswith('http://', 0, len('http://')):
+				linha = linha.replace('http://', 'https://')
+			linha = linha.strip(' \n')
 
-		r = requests.get(linha)
+			r = requests.get(linha)
 
-		aba_nfce = requests.get(url_aba_nfce, cookies = r.cookies)
-		aba_emitente = requests.get(url_aba_emitente, cookies = r.cookies)
-		aba_produtos = requests.get(url_aba_produtos, cookies = r.cookies)
-		aba_totais = requests.get(url_aba_totais, cookies = r.cookies)
-		aba_transporte = requests.get(url_aba_transporte, cookies = r.cookies)
-		aba_pagamento = requests.get(url_aba_pagamento, cookies = r.cookies)
-		aba_info_adicional = requests.get(url_info_adicional, cookies = r.cookies)
+			aba_nfce = requests.get(url_aba_nfce, cookies = r.cookies)
+			aba_emitente = requests.get(url_aba_emitente, cookies = r.cookies)
+			aba_produtos = requests.get(url_aba_produtos, cookies = r.cookies)
+			aba_totais = requests.get(url_aba_totais, cookies = r.cookies)
+			aba_transporte = requests.get(url_aba_transporte, cookies = r.cookies)
+			aba_pagamento = requests.get(url_aba_pagamento, cookies = r.cookies)
+			aba_info_adicional = requests.get(url_info_adicional, cookies = r.cookies)
 
-		parser.feed(r.text)
-		nfceParser.feed(aba_nfce.text)
-		empresaParser.feed(aba_emitente.text)
-		produtoParser.feed(aba_produtos.text)
-		totaisParser.feed(aba_totais.text)
-		pagamentoParser.feed(aba_pagamento.text)
-		infoAdicionalParser.feed(aba_info_adicional.text)
+			parser.feed(r.text)
+			nfceParser.feed(aba_nfce.text)
+			empresaParser.feed(aba_emitente.text)
+			produtoParser.feed(aba_produtos.text)
+			totaisParser.feed(aba_totais.text)
+			pagamentoParser.feed(aba_pagamento.text)
+			infoAdicionalParser.feed(aba_info_adicional.text)
 
-		dados = {}
-		dados['comum'] = parser.get()
-		dados['nfce'] = nfceParser.get()
-		dados['empresa'] = empresaParser.get()
-		dados['produtos'] = produtoParser.get()
-		dados['totais'] = totaisParser.get()
-		dados['pagamento'] = pagamentoParser.get()
-		dados['info_adicional'] = infoAdicionalParser.get()
+			dados = {}
+			dados['comum'] = parser.get()
+			dados['nfce'] = nfceParser.get()
+			dados['empresa'] = empresaParser.get()
+			dados['produtos'] = produtoParser.get()
+			dados['totais'] = totaisParser.get()
+			dados['pagamento'] = pagamentoParser.get()
+			dados['info_adicional'] = infoAdicionalParser.get()
 
-		notaBo.write(dados)
+			resposta = {}
+			resposta['msg'] = notaBo.write(dados)
+			resposta['codigo'] = 200
 
-	except Exception as e:
-		print (e)
+		except Exception as e:
+			resposta['msg'] = e.message
+			resposta['codigo'] = 500
+		finally:
+			return resposta
+
 	

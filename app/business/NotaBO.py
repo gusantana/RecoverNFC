@@ -30,16 +30,16 @@ class NotaBO :
 			# if len(dados['itens']) > 0:
 			# 	self.nota.write(dados)
 			# 	self.item.write(dados)
-				print("Nota: {0} adicionada com sucesso.".format(dados['comum']['chave']))
+				return "Nota: {0} adicionada com sucesso.".format(dados['comum']['chave'])
 			# else:
 			# 	e = Exception("Erro na nota {0}".format(dados['url']))
 			# 	raise e
 
 		except database.IntegrityError as e:
-			print("Nota: {0} já adicionada.".format(dados['comum']['chave']))
+			return ("Nota: {0} já adicionada.".format(dados['comum']['chave']))
 
 		except Exception as e:
-			print(e)
+			raise e
 		#finally:
 			#pass
 		
