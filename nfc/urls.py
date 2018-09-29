@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('nfc/', include('www.url')),
+    path('', include('www.urls')),
     path('admin/', admin.site.urls),
 ]
