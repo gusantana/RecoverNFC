@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from base64 import *
 import sys
-from . import nfc
+import nfce
 
 def index(request):
     return HttpResponse('asd')
@@ -10,6 +10,6 @@ def index(request):
 
 def send(request, url):
 	url = b64decode(url)
-	parser = nfc.Nfc()
+	parser = nfce.Nfc()
 	resposta = parser.write(url)
 	return HttpResponse('{}'.format(resposta))
