@@ -9,7 +9,7 @@ def index(request):
 
 
 def send(request, url):
-	url = b64decode(url)
+	url = b64decode(url.replace('_', '/'))
 	parser = nfce.Nfc()
 	resposta = parser.write(url)
 	return HttpResponse('{}'.format(resposta))
